@@ -1,0 +1,99 @@
+    --PREFACE--
+I chose to take a small risk by doing this lab in Python with Scikit-learn.
+
+
+    --DECISION TREE vs. LOGISTIC REGRESSION--
+All of the instances are missing some value from some feature, except
+the 34th instance. There are a few options for handling missing data. They 
+include dropping instances, dropping features, or replacing the missing
+values with values that represent some measure of central tendency (mean, 
+median, mode, etc.). Another method is Nearest Neighbor Imputation, which
+was studied in depth here: 
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4959387/
+
+Imputation, regardless of how well it preserves distribution, will have an
+impact on the variance and central tendency.
+
+An additional concern is when using a train set and a test set. We want the
+same exact method of imputation to be applied to both sets. I was careful to
+do this.
+
+I chose to replace missing values with randomly selected values from other
+instances in the dataset for the following features: 
+[duration,wage-increase-first-year,wage-increase-second-year,working-hours]
+
+I chose to impute ALL OTHER missing values with a k-NN imputer, rounding each
+interpolated value to the nearest whole number with the parameter `k=2`.
+
+I chose NOT to drop instance with index 2 (the third instance) even though
+it was missing most values because it was classified and I figured that since
+it was able to be classified, even with missing values, the values that
+exist in that instance are probably important and should be included for
+the iterative imputation process.
+
+Prior to running any classification algorithms I visualized the data with a
+correlation matrix and a heatmap. It appears as if the the feature that
+correlate most strongly with the classification of an instance are:
+pensions, standyby-pay, wage increases (for all three years). 
+
+The second most important features are:
+are contributions to health and dental, statutory holidays, and vacation.
+This all seems very logical.
+
+The feature that correlate the weakest with classification are:
+duration, cost-of-living-adjustment, shift-differential, 
+bereavement-assistance, longterm-disability-assistance, education-allowance,
+and working-hours.
+
+I chose to drop the features that had very weak correlations in order to
+simplify the model and reduce noise.
+
+--DECISION TREE ACCURACY--
+Using cross validation with 6 different splits (a different split each time),
+the accuracy looked like this:
+[0.72727273, 1.        , 0.88888889, 0.88888889, 0.77777778, 0.88888889]
+
+--LOGISTIC REGRESSION ACCURACY--
+I used the newtoc-cg solver beecause it is capable of handling the number of
+variables in this scenario.
+
+Using cross validation with 6 different splits (a different split each time),
+the accuracy looked like this:
+[0.1, 0.9       , 1.        , 1.        , 0.66666667, 0.88888889]
+
+--MORE--
+I re-did both tests a second time. On the second time around I included all
+off the variables that I originally dropped. Here are the results:
+
+    --Decision Tree
+[0.72727273, 1.        , 1.        , 0.88888889, 0.77777778, 1.        ]
+
+    --Logistic Regression
+[0.1, 0.9       , 1.        , 1.        , 0.66666667, 1.]
+
+--ADDITIONAL LABWORK--
+After performing this lab I applied the same methods covered in our textbook
+to explore a caught-in-the-wild dataset: Alleghency County Pennsylvania (my
+home county) Housing Data, directly from the state's online archives. I
+cleaned that data, shaving it down (out of necessity) from 600,000  messy
+instances, to about 60,000 refined instances. It had different features than
+the handson-ml dataset. Then I performed the same algorithms.
+
+
+    --HANDLING MISSING/BAD VALUES IN THE HOUSING SET--
+I used Python to explore the data, remove instances with missing values, and
+filled in some values. 
+
+For instance[no pun intended], in the Allegheny set
+there is a feature called 'HALFBATHS'. Many of the residential properties
+were simply missing this data. I felt comfortable filling in these missing
+values as '0', zero.
+
+On the other hand, some instances were missing a 'SALEPRICE' and/or were 
+labeled as being a 'LOVE/AFFECTION' sale price (meaning it was unrealistically
+low). I chose to drop these particular instances. They are useless.
+
+I also chose to remove instances whose 'SALEDATE' was prior to 1/1/2008.
+
+
+
