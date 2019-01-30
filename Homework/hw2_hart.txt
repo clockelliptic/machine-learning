@@ -1,0 +1,37 @@
+1. Compare the results for standard linear regression with support vector machine regression: functions -> SMOReg. Support Vector Machine regression can be used as a more robust type of regression. Try this on the CPU performance data.
+
+    Comparient the two results we see something that looks odd at first. First of 
+    all, the Linear Regression has a slightly higher correlation coefficient. 
+    Second of all, the SMOreg has a significantly higher root mean squared error 
+    (RMSE) despite having a lower mean absolute error (MAE). This could be an 
+    indicator of having significant variance and possible outliers in the 
+    dataset. When we visualize the data we can see that this is true. In each of 
+    the feature there are just a couple of instances that have exceptional 
+    values.
+
+    If it weren't for these outliers, the RMSE of the SMOreg agorithm may be 
+    lower.
+
+    Using WEKA's visualize feature, I was able to easily remove the outliers. 
+    Now the results show that SMOreg is marginally more accurate that linear 
+    regression by all measures.
+
+2. Define grid search. What good is it? What about applying it to J48 on weather data?
+
+    Grid Search is an algorithm that automatically experiments with 
+    hyperparameters given a set of values to test. It returns the best 
+    compination of hyperparameters. It is used to save time so you don't have to 
+    fiddle around with lots of combinations by hand. 
+
+    There's not a whole lot to fiddle with in the j48+weather data setup. Also, I
+    searched high and low, including google, stack exchange, and duckduckgo and 
+    couldn't find any way to do this in Weka. I can't tell if I'm supposed to do 
+    this in weka or Python. I'll return to this later once I get a chance to ask 
+    for very clear instructions. I'll definitely keep this in mind for tuning any 
+    other work I do.
+
+3. Use grid search to find the hyperparameters for SMOReg
+
+    Like I said, there is absolutely no apparent way to do this. This closest
+    thing I can find is by going into `Select Attributes` -> `Search Method` 
+    -> `RandomSearch`.

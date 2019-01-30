@@ -1,0 +1,78 @@
+I ran into some pretty significant troubles with this lab. They included
+exceptionally long computation times and some other errors with *very*
+non-obvious solution. I thoroughly consulted StackExchange and other forums
+to no avail. I made the best I could of the lab and resolved that I would
+make up for it by getting into the fine details of MachineLearning by working
+in Python.
+
+I did take some great learning from this lab, though in terms of the strengths
+of KNN versus decision trees when it comes to classifying this type of data.
+I am really looking forward to digging into the details of MultiLayer 
+Perceptrons in TensorFlow and sinking my teeth into the mathematics of these
+algorithms. Thanks for the great lab!
+
+
+1. Run nearest neighbor on contact lens dataset (lazy -> IBk)
+ 
+     IBk with default setting achieved approximated 79% correct classification 
+     rate.
+ 
+ 2. import MNIST data into Weka
+ 3. Run J48 on that dataset.
+ 
+     The dataset that I have has 12,000 instances and 785 features. Pretty big 
+     dataset. In fact, it's big enough that Weka's default memory heap was 
+     exceeded by the dataset. I  had to edit the Weka binary and set the default 
+     memory limit to a higher value. I gave it about 2Gb of memory to work with.
+
+     With the default settings and 10-fold cross-validation, the decision tree 
+     accurately classified about 83.6% of the instances. That's unacceptable for 
+     handwriting identification.
+
+     Number of leaves on the tree: 642
+     Size of the tree: 1283 (whatever that means)
+ 
+ 4. Run multi-layer perceptron on the dataset.
+ 
+     Unfortunately WEKA doesn't utilize multiple CPU's, so this took a really, 
+     really long time to run. I left it running for about an hour and it didn't
+     even finish building the model!
+
+ 5. Run K-nearest neighbors (lazy -> IBk) on the dataset.
+ 
+     Again I chose to use just a training set on this rather than 
+     cross-validation simply for the sake of time.
+
+     100% of instances were classified correctly. I didn't trust it so I 
+     retrained and tested the model with a 3-fold split and cross-validation.
+     
+     With cross-validation the algorithm correctly classified 94.8% of the
+     instances.
+
+ 6. Use K* (lazy) on MNIST
+ 
+     Like the MLP model, this took an inordinate amount of time to run. With 3-fold
+     cross-validation, the first fold ran for 30 minutes and was unable to finish
+     in that time. Again, I simply didn't have time to let this finish running.
+
+ 7. Compare the accuracies of the 4 algorithms on MNIST
+ 
+     Given my time limitations I can compare KNN and J48. As I personally would
+     expect, KNN was notably more accurate given only a 3-fold split.
+ 
+ 8. Compute the confusion matrix
+ 
+     Done!
+     
+ 9. Compute precision, recall
+ 
+     Done!
+ 
+ 10. Describe Grid Search on hyperparameters for J48
+ 
+     Apparently this isn't possible because it cannot handle a multi-valued
+     nominal class. I removed the nominal class attribute, which resulted in
+     a "null" error, as I expected.     
+     
+     I fiddled with this pretty thoroughly with no headway and
+     also consulted StackExchange.

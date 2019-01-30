@@ -1,0 +1,130 @@
+PROBLEM 1
+    Random Forest is a technique that randomply partitions data into sub-samples
+    and generates classification trees for each of the the subsamples. Then, the
+    outputs of the trees are analyzed and the error function of the model is
+    minimized by selecting appropriate variables for each node and/or adjusting
+    weights for the regression function based on this output data.
+
+    Random forest is great because it can significantly reduce computational 
+    overhead when used correctly.
+
+
+
+PROBLEM 2
+    Stochastic Gradient Descent is an iterative, incremental algorithm
+    that works by minimizing the error function of a predictor. It updates
+    its model instance-by-nstance or in small batches.
+
+    Stochastic Gradient Descent (SGD), like Gradient Descent (GD), updates a 
+    set of parameters iteratively in order to minimize the error.
+
+    The difference is that with SGD, rather than using the entire dataset
+    to update a parameter/weight in a particular iteration, you can use as few
+    as one instance to update a parameter.
+
+    The reason why SGD is used is because when training on massive datasets
+    it simply takes too long to use the entire dataset to update a parameter.
+
+    SGD is a close approximate to GD, so its error function won't be quite as
+    optimal, and it converges more quickly, but in the real world it is obviously
+    good enough in many cases.
+
+    Mathematically thinking, if we imagine this geometrically, GD and SGD attempt
+    to find the quickest downward slope to reach the bottom of a valley. So
+    Gradient Descent techniques find the quickest way "downhill" to a minimized
+    error.
+
+    Stochastic kind of means "chaotic" or "random", and so we can imagine that 
+    the path SGD takes to the bottom of the hill is a little bit zig-zaggy (like 
+    a graph of the stock market, or the meandering of a particle in water). It's
+    a bit less direct that GD on account of this.
+
+
+
+PROBLEM 3
+    Again, like I've mentioned in labs, this just isn't working. I've searched
+    high and low and can't figure it out. Looking forward to getting some
+    feedback about what I'm doing wrong next time we see each other.
+
+
+PROBLEM 4
+
+    # We can do this the old fashioned way, which
+    # will be important to know if we want to write
+    # any of our own algorithms from scratch
+
+    import csv
+
+    with open('contact-lenses.csv', newline='') as csvdata:
+            reader = csv.reader(csvdata, delimiter = ',')
+            for row in reader:
+                print(', '.join(row))
+                
+            
+    # Or we can use Pandas to print everything nicely
+    # Plus, Pandas is industry-standard for EDA and stats
+
+    import pandas as pd
+    print(pd.read_csv('contact-lenses.csv'))
+    
+
+    # And if we're going for presentation or even easier
+    # viewing, we can print our data as a dataframe in
+    # iPython (Jupyter Notebook et al.)
+
+    import pandas as pd
+
+    pd.DataFrame(pd.read_csv('contact-lenses.csv'))
+
+
+PROBLEM 5
+    '''
+    These are pretty open-ended instructions. 
+    I suppose I'll just write a little function that
+    finds the standard deviation of a list of numbers.
+    '''
+
+    ## Highly readable version:
+    def std_easy(il):
+        mean = sum(il) / len(il)
+        squared_diffs = [(i - mean)**2 for i in il]
+        mean_ = sum(squared_diffs) / len(il)
+        return mean_**(1/2)
+
+    ## Efficient version:
+    def std_eff(il):
+        mean = lambda l: sum(l)/len(l)
+        return mean([(i - mean(il))**2 for i in il])**(1/2)
+
+    ## One-liner:
+    std_ol = lambda l: (sum([(i - (sum(l)/len(l)))**2 for i in l])/len(l))**(1/2)
+    
+    # Or we could import numpy, pandas, stats or any of
+    # the other zillion libraries that do standard deviation!
+
+    import numpy as np
+    np.std(l_)
+
+
+PROBLEM 6
+
+    I decided to program this in TensorFlow since WEKA was taking an excptionally 
+    long time to run and I could figure out how to change the MLP's timing.
+    
+    Here are the metrics from the TensorFlow MLP model:
+    
+        validation accuracy: 0.9527
+        Precision 0.9527
+        Recall 0.9527
+
+        confusion_matrix
+        [[ 963    2    2    0    1    5    3    3    0    1]
+         [   1 1121    4    0    0    2    3    0    3    1]
+         [   9    5  984    6    6    2    1   10    9    0]
+         [   0    4   10  949    1   23    1    9    5    8]
+         [   4    2   10    0  918    4    7    9    7   21]
+         [   1    1    0   14    2  861    4    3    5    1]
+         [   9    4    1    1    7   14  916    3    3    0]
+         [   0    9    6    4    7    1    0  991    3    7]
+         [  13    3    4   20    5   23    2    6  889    9]
+         [   6    6    1   10   10   12    2   25    2  935]]
