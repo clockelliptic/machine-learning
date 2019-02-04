@@ -1,0 +1,141 @@
+
+ - WHAT DIDN'T WORK - 
+I did not get to do the first several parts of the lab (the 1R algorithm and
+the j48 tree + entropy calculations).
+
+ - WHAT DID WORK -
+I did however write some code in python for the regression problem! Here it
+is. 
+
+ - ABOUT MY CODE -
+Please note that this is written for Jupyter Notebook. There are TWO dis-
+tinct cells below. The Dashed Lines #-----------...----------# below mark the
+separation in the cells. 
+
+I wrote the code in functional style to the best of my ability, utilizing
+in-line lambda functions and partial applications where possible. I also used
+list comprehensions to replace loops. Python's list comprehension is highly
+optimized and greatly outperforms iterative loops.
+
+ - WHAT I LEARNED -
+1. The Gaussian Probability Density function IS THE NORMAL DISTRIBUTION.
+    Plotted as a bar graph, it looks like he typical normal distribution, but
+    plotted as a scatter plot or a line graph, it is a single wavelet!
+    
+2. I plotted FOUR sets of data on the final graph:
+       - A scatter plot of random points on the quadratic curve
+       - A polynomial regression fit of the data points
+       - An ideal quadratic curve using the gaussian probability density 
+         function
+       - A linear fit
+     Since the scatter plot is random, the regression fit is also slightly
+     random. By contrast, the ideal curve is not random! I plotted the graph
+     several times in a row and observed that the regression curve and the
+     ideal curve were different such that if the regression curve were data
+     from the "Real World", the ideal curve would be the average of all those
+     data sets.
+     
+3. Mathematically, regression *is* optimization. In fact, isn't that just
+   what machine learning is in general? A set of optimization techniques that
+   apply to the problem of gaining insight?
+   
+    This lab made me realize that if I have a dataset that needs to be
+    modeled in some way: as a mathematical curve, as a set of classified
+    objects, etc., If I can turn the problem into an optimization problem,
+    I can get a firm footing in the problem and begin to dissect it.
+
+
+##-------------------------------------------------------------------------##
+                                BEGIN CODE
+##-------------------------------------------------------------------------##
+
+# Essential imports
+import numpy as np
+import statistics as st
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# import jtplot submodule from jupyterthemes to style our plots
+from jupyterthemes import jtplot
+jtplot.style()
+
+# Import learning tools
+from sklearn.linear_model import  LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import PolynomialFeatures
+
+
+# probability density function of a gaussian random variable
+# note that this is a normal distrubution, so (mean = median = mode)
+p_g = lambda x, mean, variance : 1/np.sqrt(2*np.pi*variance)*np.exp(-((x-mean)**2)/(2*variance))
+
+
+# plot the normal distribution bar graph
+data = [p_g(i, 10, 3) for i in range(21)]
+fig = plt.figure(figsize = (10, 7))
+plt.bar(list(range(21)), data)
+
+##-------------------------------------------------------------------------##
+                                NEW CELL
+##-------------------------------------------------------------------------##
+
+# hand code a quadratic function using the Gaussian Probability function
+# so we can compare to our regression/interpolation
+quadratic_model = lambda x : (0.5)*x**2 + p_g(x, 10, 2)
+
+# function that generates a set of points that are a random, constrained distance
+# from our ideal quadratic curve
+data_gen = lambda x : (0.5)*x**2 + np.random.normal(0,1)
+
+# generate our input points in the x-dimension
+x = np.linspace(-3,3,100)
+
+# generate our synthetic dataset (aka the y-values of scatterplot points)
+data___ = [data_gen(i) for i in x]
+
+# prepare synthetic dataset graph for regression
+x = np.linspace(-3,3,100)
+x = x[:, np.newaxis]
+
+y = np.asarray(data___)
+y = y[:, np.newaxis]
+
+# linear fit
+model = LinearRegression()
+model.fit(x, y)
+y_pred = model.predict(x)
+
+# polynomial regression fit
+polynomial_features = PolynomialFeatures(degree=2)
+x_poly = polynomial_features.fit_transform(x)
+model.fit(x_poly, y)
+y_poly_pred = model.predict(x_poly)
+
+# ideal polynomial fit
+y_ideal = quadratic_model(x)
+
+# calculate regression metrics
+print("Metrics of polynomial regression:")
+rmse = np.sqrt(mean_squared_error(y,y_poly_pred))
+r2 = r2_score(y,y_poly_pred)
+print("  RMSE: ", rmse)
+print("  R2: ", r2)
+print("-------------------------------------")
+# calculate ideal metrics
+print("Metrics of ideal equation:")
+rmse = np.sqrt(mean_squared_error(y,y_ideal))
+r2 = r2_score(y,y_ideal)
+print("  RMSE: ", rmse)
+print("  R2: ", r2)
+
+# plot it
+plt.figure(figsize=(15,10))
+
+    # raw synthetic dataset
+plt.scatter(x, y)
+    # linear fit
+plt.plot(x, y_pred, color='g')
+    # polynomial fit
+plt.plot(x, y_poly_pred, linewidth=3, color='r')
+    # hand-coded quadratic function
+plt.plot(x, y_ideal, '--', linewidth=3, color='y')

@@ -1,0 +1,88 @@
+Allen Hart
+Programming Language Theory and Practice - Machine Learning Module
+Short Essay: Ethics in Data Mining
+2/1/2018
+
+On the topic of ethics in data mining and machine-learning-implied industries, 
+issues that have surface in the public media about ethics in data mining are 
+the first to come to mind: how companies use and store user data, dumb 
+algorithms that have unintended social consequences, massively energy-hungry 
+computational processes, nefarious use-cases of new consumer and industry 
+technologies, the intentional overlook of potentially costly problems in 
+pharma / medicine and other industries, statistical biases in health/life 
+insurance, the manner in which data is acquired. Expanding on these topics, 
+here is a gallery on considerations that run through my head when I consider 
+the ethical implications across various data-critical domains:
+
+     - What are the impacts of our data mining process on  the data source 
+       and on society? 
+        For instance, are we scraping data in a manner that disrupts a 
+        business or website, significantly distorts its metrics or 
+        performance, or that may appear as an attack?
+     - How is the data stored and who has access to it?  
+        Is the data our product, and if so who do we sell it to? Can this 
+        data be used to triangulate or target real individuals? Is our data s
+        ensitive, is it secure?
+     - What is our final product and does it have any unseen, negative 
+       use-cases? 
+        Examples include Facebook, smart watches that have revealed the 
+        location of soldiers in remote locations, etc..
+     - Do we have policies for handling the emergence of patterns that may 
+       reveal costly problems in our product / data so that we can act 
+       responsibly (i.e. without intentionally covering them up)? 
+        Do we value real people over “progress”?
+     - Are our processes resource-efficient?
+
+
+    In addition to these primarily logistic ethics consideration is a related 
+set of ethics issue regarding the limitations that ought to be placed on 
+autonomous AI agents. The massive foibles of such agents is evident is 
+systems like Microsoft’s Tay Chatbot accidentally learning to be super 
+racist, or Google AI’s inability to distinguish the difference between 
+certain dark-skinned primates and dark-skinned humans--a problem which is due
+to very dumb but easy-to-implement algorithms analyzing massive datasets. All
+of this and more is evidence that AI is in-fact potentially very dangerous 
+for a specific reason: AI and machine learning provide a massively horizontal
+amplification of the intelligence that designs them, including systematic 
+biases in both the design and the analytic methodology behind them. Drawing 
+on these considerations, there are approximately six vectors of containment 
+for potentially dangerous AI agents:
+
+    1. Agents should have key weaknesses
+    2. There should be very well-defined and thoroughly understood boundaries 
+       between levels of AI intelligence / competence and trust
+    3. Self-replication of software & hardware should be limited
+    4. Self-repair and self-improvement should be limited
+    5. Access to energy should be limited
+    6. Agents should be relegated to roles excluding the physical and network 
+       security of critical infrastructures
+       
+#--------------------------------------------------------------------------#
+#--------------------------------------------------------------------------#
+       
+
+
+
+
+                #-----------------#
+                #--- PROBLEM 8 ---#
+                #-----------------#
+            
+# well, i can calculate this in my head... but i guess
+# python is maybe more interesting
+
+# take our matrix
+A = [[3,0],
+     [0,5]]
+
+# reshape our matrix
+A = A[0]+A[1]
+
+# compute the determinant
+det = 1 / (A[0]*A[-1] - A[1]*A[-2])
+
+# compute our inverse matrix, A^(-1)
+A_ = [[round((det*i), 2) for i in A[0:2]],
+      [round((det*i), 2) for i in A[2:4]]]
+
+for i in A_: print(i)
