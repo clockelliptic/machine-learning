@@ -59,7 +59,295 @@ for potentially dangerous AI agents:
        
 #--------------------------------------------------------------------------#
 #--------------------------------------------------------------------------#
-       
+
+
+                    #-----------------#
+                    #--- PROBLEM 2 ---#
+                    #-----------------#
+                    
+'''
+(Topic: numerical data and partition boundaries.) 
+
+Given these rules: 
+ - every partition should contain at least 3 instances of the majority class
+ - merge 2 adjacent partitions when they have the same majority class
+ - no partition should separate instances of the same class
+ 
+ 
+ Partition the following data set:
+      A A B A B B B C B C B C C    
+'''
+
+##   I can't figure out what this is asking for. Doesn't make sense to me.
+##   There aren't any partitions to begin with and there aren't any limitations
+##   on wether I can sort the data 
+
+##   The majority class is 'C', so there can only be two partitions and they
+##   are acquired by reading the list backward and spltting the list after the 
+##   the third instance.
+
+# ANSWER: [A A B A B B B C B ] [C B C C ]
+
+##   I think maybe the problem was supposed to clarify that the process should 
+##   be iterative/recursive such that the process terminates when the rules can 
+##   not longer be satisfied.
+
+##   On the second pass through the remaining data, still readin gbackward,
+##   we get another partition:
+
+# Final "right" Answer: [A A B A] [B B B C B] [C B C C]
+
+
+    
+
+
+                    #-----------------#
+                    #--- PROBLEM 3 ---# 
+                    #-----------------#
+                    
+ # Note that problem 3 code is written                
+ # like EDA in a jupyter notebook, note the cell divisions
+            
+
+import arff
+import pandas as pd
+import numpy as np
+
+# read in data
+dataset = arff.load(open('data/contact-lenses.arff', 'r'))
+data = pd.DataFrame(dataset['data'], columns=[i[0] for i in dataset['attributes']])
+
+# inspect counts for each value in each feature
+for i in list(data):
+    print(data[i].value_counts())
+    print("------------------------------")
+
+
+#####-----------------------------------------------------------------####
+'''NEW CELL'''
+#####-----------------------------------------------------------------####
+    
+    
+# define probability function
+P = lambda A, B, P_BA : (P_BA * A)/(B)
+
+
+# total number of instances
+n = len(data)
+
+# probability of individual events in the dataset
+P_none = len(data.loc[data['contact-lenses'] == 'none']) / n
+P_soft = len(data.loc[data['contact-lenses'] == 'soft']) / n
+P_astigmatism = len(data.loc[data['astigmatism'] == 'yes']) / n
+P_myope = len(data.loc[data['spectacle-prescrip']=='myope']) / n
+
+# probabilities of particular events given other individual events
+P_myope_astigmatism = P(P_myope, 
+                        P_astigmatism, 
+                        len(data.loc[data['astigmatism']=='yes'].loc[data['spectacle-prescrip']=='myope']) / n
+                       )
+P_astigmatism_myope = P(P_astigmatism, 
+                        P_myope, 
+                        len(data.loc[data['spectacle-prescrip']=='myope'].loc[data['astigmatism']=='yes']) / n
+                       )
+P_astigmatism_none = P(P_astigmatism, 
+                        P_myope, 
+                        len(data.loc[data['contact-lenses'] == 'none'].loc[data['astigmatism']=='yes']) / n
+                       )
+print("\n")
+print("P(None): ", P_none)
+print("P(Soft): ", P_soft)
+print("P(Astigmatism): ", P_astigmatism)
+print("P(Myope): ", P_myope)
+print("P(Myope|Astigmatism): ", P_myope_astigmatism)
+print("P(Astigmatism|Myope): ", P_astigmatism_myope)
+print("P(Astigmatism|None): ", P_astigmatism_none)
+
+# OUTPUT:
+'''
+young             8
+presbyopic        8
+pre-presbyopic    8
+Name: age, dtype: int64
+------------------------------
+myope           12
+hypermetrope    12
+Name: spectacle-prescrip, dtype: int64
+------------------------------
+no     12
+yes    12
+Name: astigmatism, dtype: int64
+------------------------------
+reduced    12
+normal     12
+Name: tear-prod-rate, dtype: int64
+------------------------------
+none    15
+soft     5
+hard     4
+Name: contact-lenses, dtype: int64
+------------------------------
+
+
+P(None):  0.625
+P(Soft):  0.20833333333333334
+P(Astigmatism):  0.5
+P(Myope):  0.5
+P(Myope|Astigmatism):  0.25
+P(Astigmatism|Myope):  0.25
+P(Astigmatism|None):  0.3333333333333333
+'''
+
+
+
+
+                #-----------------#
+                #--- PROBLEM 4 ---#
+                #-----------------#
+
+# I think the problem is mis-typed because: n/n=1 for any n where n!=0
+
+P_normal = len(data.loc[data['tear-prod-rate']=='normal']) / n
+P_young = len(data.loc[data['age']=='young']) / n
+
+P_none_astigmatism = P(P_none,
+                       P_astigmatism,
+                       len(data.loc[data['astigmatism']=='yes'].loc[data['contact-lenses'] == 'none']) / n
+                       )
+P_none_normal =      P(P_none,
+                     P_normal,
+                       len(data.loc[data['tear-prod-rate']=='normal'].loc[data['contact-lenses'] == 'none']) / n
+                       )
+P_none_myope =       P(P_none,
+                       P_myope,
+                       len(data.loc[data['spectacle-prescrip']=='myope'].loc[data['contact-lenses'] == 'none']) / n
+                       )
+P_none_young =       P(P_none,
+                       P_young,
+                       len(data.loc[data['age']=='young'].loc[data['contact-lenses'] == 'none']) / n
+                       )
+
+p_none_normal_astigmatism_myope_young = P_none_young*P_none_myope*P_none_normal*P_none_astigmatism/P_normal*P_astigmatism*P_young*P_myope
+
+print("P(None|Normal,Astigmatism,Myope,Young): ", p_none_normal_astigmatism_myope_young)
+
+# OUTPUT: P(None|Normal,Astigmatism,Myope,Young):  0.0012362444842303243
+
+
+
+
+
+                #-----------------#
+                #--- PROBLEM 5 ---#
+                #-----------------#
+'''
+Reframing the question:
+    a) P(Infected|Positive)
+    b) P(Not Infected|Positive)
+    c) P(Infected|negative)
+    d) P(Not Infected|Negative)
+    e) P(Infected|Positive) where P(Infected) = 0.02 = 1/500
+'''
+
+
+P_infected = 1/25
+P_notinfected = 24/25
+P_falseneg_rate = 3/100
+P_trueneg = 98/100
+P_notinfected = 96/100
+
+#  a) P(Infected|Positive)
+P_truepos = 97/100
+
+#  b) P(Not Infected|Positive)
+P_falsepos = 2/100
+
+#  c) P(Infected|negative)
+P_falseneg = (P_infected)*(P_falsepos) / ( (P_infected)*(P_falsepos)+(P_notinfected)*(P_trueneg))
+
+#  d) P(Not Infected|Negative)
+P_trueneg = (P_notinfected)*(P_trueneg) / ( (P_notinfected)*(P_trueneg)+(P_infected)*(P_falseneg_rate) )
+
+#  e) P(Infected|Positive) where P(Infected) = 0.02 = 1/500
+P_infected_e = 0.02
+P_notinfected_e = 99.8
+P_truepos_e = (P_infected_e)*(P_truepos) / ( (P_infected_e)*(P_truepos)+(P_notinfected_e)*(P_truepos))
+
+
+## Print results
+
+print('''
+Results:
+    a) P(Infected|Positive):           .{}
+    b) P(Not Infected|Positive):       .{}
+    c) P(Infected|negative):           .{}
+    d) P(Not Infected|Negative):       .{}
+    e) P(Infected|Positive) [where P(Inf) = 0.02]:      .{}
+'''.format(P_truepos, P_falsepos, P_falseneg, P_trueneg, P_truepos_e))
+
+# OUTPUT:
+'''
+Results:
+    a) P(Infected|Positive):           .0.97
+    b) P(Not Infected|Positive):       .0.02
+    c) P(Infected|negative):           .0.0008496176720475786
+    d) P(Not Infected|Negative):       .0.9987261146496815
+    e) P(Infected|Positive) [where P(Inf) = 0.02]:      .0.0002003606491685033
+    
+'''
+
+
+
+
+                #-----------------#
+                #--- PROBLEM 6 ---#
+                #-----------------#
+            
+# I suppose we're supposed to suppose a few things that aren't stated in the
+# problem.... so I'm going to treat this like a series of fair coin-tosses, and
+# I'm going to interpret this as asking for the information-entropy.
+
+import math
+
+# number of coin tosses
+tosses = [0,0,0,0,0,1,1,1]
+
+# calculate possible outcomes
+H = lambda Probs: sum([(P[1] * math.log(1/P[1],2)) for P in Probs])
+
+# generate list of tuples containing
+# probability of each possible outcome
+outcomes = set(tosses)
+probs = [(j, len([i for i in tosses if i == j])/len(tosses)) for j in outcomes]
+
+# calculate entropy, the amount of information
+H(probs)
+
+# OUTPUT: 0.9544340029249649
+
+
+
+
+                #-----------------#
+                #--- PROBLEM 7 ---#
+                #-----------------#
+            
+            
+# I think my book is numbered differently because I have a digital version
+# hmmmm...I'm assuming that this problem is about the logistic regression
+# error function, which is on page 189 of my book.
+
+'''
+Maybe we can run through this in class.
+
+here's a pretty intense run-through of this derivation showing some very
+interesting things, such as an identity of the signmoid function that is
+required to perform this.
+
+in any case, I learned so much from this problem. thank you!!
+
+https://stats.stackexchange.com/questions/278771/how-is-the-cost-function-from-logistic-regression-derivated
+'''
 
 
 
@@ -86,3 +374,6 @@ A_ = [[round((det*i), 2) for i in A[0:2]],
       [round((det*i), 2) for i in A[2:4]]]
 
 for i in A_: print(i)
+
+# OUTPUT:  [0.2, 0.0]
+#          [0.0, 0.33]
